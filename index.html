@@ -7,6 +7,8 @@
     <base target="_parent">
     <!-- Monitor website traffic with Umami -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="81b626e1-16f6-4963-b3b8-4f9d34cd7fb9"></script>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="./assets/app_logo.ico" type="image/x-icon">
     <!-- Load TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.0.0/dist/tf.min.js"></script>
     <!-- Load Highcharts -->
@@ -35,11 +37,6 @@
         </select>
 	
         <button id="toggleDarkMode" class="dark-mode-button">Appearance</button>
-	<script>
-            document.getElementById('toggleDarkMode').addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-            });
-	</script>
     </div>
     <h1 class="header-text">CosmoSlider</h1>
 
@@ -88,5 +85,11 @@
       <p>Author: Andreas Nygaard</p>
       <a href="mailto:andreas@phys.au.dk">andreas@phys.au.dk</a></p>
     </footer>
+
+    <div class="buymeacoffee-section">
+      <a href="https://buymeacoffee.com/andreasnygaard" style="display: inline-block; overflow: hidden; border-radius: 13px; width: 250px; height: auto;">
+	<img src="./assets/bmac.png" alt="Buy me a coffee and support my work" style="border-radius: 13px; width: 250px; height: auto;">
+      </a>
+    </div>
 </body>
 </html>

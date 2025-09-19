@@ -1,3 +1,23 @@
+// helper to get URL parameters
+function getQueryParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+// normal button toggle
+document.getElementById('toggleDarkMode').addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+});
+
+// check parameter on load
+window.addEventListener('DOMContentLoaded', () => {
+    const darkParam = getQueryParam('dark');
+    if (darkParam === '1' || darkParam === 'true' || darkParam === 'yes') {
+	document.body.classList.add('dark-mode');
+    }
+});
+
+
 let model;
 const sliders = [];
 
