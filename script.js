@@ -1,20 +1,54 @@
-// helper to get URL parameters
+// --- Helper to read URL parameters ---
 function getQueryParam(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
 }
 
-// normal button toggle
-document.getElementById('toggleDarkMode').addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-});
+// --- Helper to inject Umami ---
+function loadUmami() {
+  if (window.__umamiLoaded) return; // prevent duplicate loads
+  window.__umamiLoaded = true;
 
-// check parameter on load
-window.addEventListener('DOMContentLoaded', () => {
-    const darkParam = getQueryParam('dark');
-    if (darkParam === '1' || darkParam === 'true' || darkParam === 'yes') {
-	document.body.classList.add('dark-mode');
-    }
+  const s = document.createElement("script");
+  s.defer = true;
+  s.src = "https://cloud.umami.is/script.js";
+  s.setAttribute("data-website-id", "81b626e1-16f6-4963-b3b8-4f9d34cd7fb9");
+  document.head.appendChild(s);
+}
+
+// --- Lazy activation when tracking=false ---
+function enableUmamiOnInteraction() {
+  const interactionEvents = ["click", "scroll", "keydown", "mousemove", "touchstart"];
+
+  const triggerLoad = () => {
+    loadUmami();
+    interactionEvents.forEach(evt => window.removeEventListener(evt, triggerLoad));
+  };
+
+  interactionEvents.forEach(evt => {
+    window.addEventListener(evt, triggerLoad, { once: true, passive: true });
+  });
+}
+
+// --- On DOM ready ---
+window.addEventListener("DOMContentLoaded", () => {
+  // Handle dark mode
+  const darkParam = getQueryParam("dark");
+  if (darkParam === "1" || darkParam === "true" || darkParam === "yes") {
+    document.body.classList.add("dark-mode");
+  }
+
+  // Handle tracking
+  const trackingParam = getQueryParam("tracking");
+  const trackingDisabled = (trackingParam === "0" || trackingParam === "false" || trackingParam === "no");
+
+  if (trackingDisabled) {
+    // Only load Umami after user interaction
+    enableUmamiOnInteraction();
+  } else {
+    // Load Umami immediately
+    loadUmami();
+  }
 });
 
 
