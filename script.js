@@ -51,6 +51,11 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// --- Dark mode toggle button ---
+document.getElementById("toggleDarkMode").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    updateAxesAndChart();
+});
 
 let model;
 const sliders = [];
