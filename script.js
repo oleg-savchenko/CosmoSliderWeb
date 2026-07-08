@@ -312,6 +312,14 @@ function getCmbYAxisTitle(mode) {
     return latexInline(`\\frac{\\ell(\\ell+1)}{2\\pi}C_\\ell^{\\mathrm{${mode}}}\\;[\\mu\\mathrm{K}^2]`);
 }
 
+function getCmbDataLegendLabel(mode) {
+    if (mode === "PP") {
+        return 'Planck 2018 φφ';
+    }
+
+    return `Planck 2018 ${mode}`;
+}
+
 function getMatterYAxisTitle(mode) {
     const symbol = mode === "PK_NONLIN" ? 'P_{\\mathrm{m}}^{\\mathrm{non\\text{-}lin}}' : 'P_{\\mathrm{m}}';
     return latexInline(`${symbol}\\;(k)\\;[(\\mathrm{Mpc}/h)^3]`);
@@ -720,8 +728,6 @@ window.addEventListener('load', async () => {
     models.matterLinear = await loadGraphModel('web_model/mpk_lin/model.json');
     models.matterNonlinear = await loadGraphModel('web_model/mpk_nonlin/model.json');
 
-    document.body.addEventListener("click", updateAxesAndChart);
-
     window.addEventListener("resize", updateAxesAndChart);
 
     // Initial chart display
@@ -862,13 +868,16 @@ function createModelSeries(lineWidth = 6) {
 function createCmbDataSeries(pointSize = 4) {
     return {
         type: 'scatter',
+        name: getCmbDataLegendLabel(selectedOption.value),
         data: [],
         opacity: 0.6,
-        showInLegend: false,
+        showInLegend: true,
         marker: {
             symbol: 'circle',
             radius: pointSize,
             fillColor: 'limeGreen',
+            lineColor: 'limeGreen',
+            lineWidth: 1,
         }
     };
 }
@@ -1013,10 +1022,7 @@ function updateMatterAxes() {
     const marginLeft = compactChart ? 90 : 115;
     const marginRight = compactChart ? 20 : 30;
     const marginBottom = compactChart ? 100 : 115;
-    const displayedMatterKGrid = matterKGrid.length ? getDisplayedMatterKGrid() : [];
-    const kMin = displayedMatterKGrid.length ? displayedMatterKGrid[0] : 1e-5;
-    const kDataMax = displayedMatterKGrid.length ? displayedMatterKGrid[displayedMatterKGrid.length - 1] : 10;
-    const kMax = Math.max(10, kDataMax);
+    const { kMin, kMax } = getFixedMatterPlotKBounds();
     const xLogTicks = generateLogTicks(Math.log10(kMin), Math.log10(kMax));
     const yLogTicks = generateLogTicks(Math.log10(MATTER_Y_MIN), Math.log10(MATTER_Y_AXIS_MAX));
 
@@ -1186,6 +1192,8 @@ function updateAxes() {
     var lineWidth = 6;
     var stemWidth = 3;
     var pointSize = 4;
+    const outputChart = document.getElementById('outputChart');
+    const compactChart = outputChart.offsetWidth <= 500 || outputChart.offsetHeight < 400;
     var yMin = 0;
     var yMax = 8400;
     var yTicks = [0, 2000, 4000, 6000, 8000];
@@ -1382,7 +1390,29 @@ function updateAxes() {
         max: yMax,
     };
     axisConfig.legend = {
-        enabled: false
+        enabled: Boolean(data),
+        align: 'right',
+        verticalAlign: 'top',
+        layout: 'vertical',
+        floating: true,
+        x: -marginRight - 12,
+        y: marginTop + 12,
+        borderWidth: 1,
+        borderColor: axisColor,
+        borderRadius: 0,
+        padding: compactChart ? 5 : 8,
+        itemStyle: {
+            color: axisColor,
+            fontSize: compactChart ? '9px' : '12px',
+        },
+        itemHoverStyle: {
+            color: axisColor,
+        },
+        backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.82)' : 'rgba(255, 255, 255, 0.88)',
+        symbolHeight: compactChart ? 7 : 8,
+        symbolWidth: compactChart ? 10 : 12,
+        itemMarginTop: 1,
+        itemMarginBottom: 1,
     };
     resetCmbSeries(lineWidth, pointSize, stemWidth);
 };
@@ -1433,6 +1463,20 @@ function getMatterHubbleParameter() {
 function getDisplayedMatterKGrid() {
     const h = getMatterHubbleParameter();
     return matterKGrid.map(k => k / h);
+}
+
+function getFixedMatterPlotKBounds() {
+    if (!matterKGrid.length) {
+        return { kMin: 1e-5, kMax: 10 };
+    }
+
+    const hMin = MATTER_SLIDER_SPECS.slider3.min / 100;
+    const hMax = MATTER_SLIDER_SPECS.slider3.max / 100;
+
+    return {
+        kMin: matterKGrid[0] / hMin,
+        kMax: matterKGrid[matterKGrid.length - 1] / hMax,
+    };
 }
 
 async function predictModel(graphModel, inputValues) {
