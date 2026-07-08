@@ -1,1 +1,8 @@
 *.DS_Store
+.claude/
+command.txt
+
+mpk_conversion/artifacts/
+mpk_conversion/verification_data/
+mpk_conversion/verify_tfjs_node/node_modules/
+__pycache__/

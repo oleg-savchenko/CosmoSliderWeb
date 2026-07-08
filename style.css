@@ -32,6 +32,7 @@ body {
 .container-side-by-side {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
 }
 .container-buttons {
     display: flex;
@@ -48,10 +49,20 @@ body {
 }
 .chart {
     position: relative;
-    width: 70%;
+    width: 68%;
     max-width: 100%;
-    height: 800px;
+    height: 840px;
     z-index: 1;
+}
+#outputChart .highcharts-axis-labels span,
+#outputChart .highcharts-axis-labels div,
+#outputChart .highcharts-axis-title,
+#outputChart .highcharts-axis-title span,
+#outputChart .highcharts-axis-title div,
+#outputChart mjx-container,
+#outputChart mjx-container svg {
+    overflow: visible !important;
+    text-overflow: clip !important;
 }
 .app-download-section {
     margin: auto;
@@ -70,12 +81,15 @@ body {
     margin-top: 1cm;
 }
 .all-sliders-container {
-    margin-top: 10px;
-    width: 30%;
+    margin-top: 0;
+    width: 32%;
     max-width: 100%;
     padding: 20px;
-    overflow: auto;
-    max-height: 600px;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: center;
 }
 .slider-label {
     position: absolute;
@@ -83,16 +97,22 @@ body {
     top: -3px;
     text-align: left;
 }
+.math-slider-label {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    line-height: 1;
+    top: -7px;
+}
 .slider-value {
     position: absolute;
     right: 0%;
     top: 0px;
-    width: 30%;
+    width: 24%;
     text-align: right;
     font-size: 18px;
 }
 .slider {
-    margin-top: 32px;
+    margin-top: 38px;
     margin-bottom: 17px;
     width: 100%;
 }
@@ -110,7 +130,7 @@ button {
 .dropdown {
     position: absolute;
     right: 0;
-    width: 90px;
+    width: 120px;
     top: 48px;
     height: 20px;
     z-index: 2;
@@ -135,6 +155,15 @@ select {
     width: 80px;
     height: 32px;
     float: left;       
+}
+
+.toggle-checkbox-wrapper.disabled {
+    opacity: 0.45;
+}
+
+.toggle-checkbox-wrapper.disabled .check-slider,
+.toggle-checkbox-wrapper.disabled .toggle-text {
+    cursor: default;
 }
 
 .toggle-checkbox {
@@ -240,6 +269,9 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @media (max-width: 700px) {
+    .container-side-by-side {
+        align-items: flex-start;
+    }
     .chart {
         width: 100%;
         height: 45vh;
@@ -248,6 +280,9 @@ input[type="range"]::-moz-range-thumb {
 	margin-top: 0px;
         width: 100%;
         height: 35vh;
+        overflow: auto;
+        justify-content: flex-start;
+        align-self: auto;
     }
     .header-text {
 	font-size: 30px;
@@ -262,6 +297,10 @@ input[type="range"]::-moz-range-thumb {
         width: 100%;
         height: 300px;
     }
+    .all-sliders-container {
+        justify-content: flex-start;
+        align-self: auto;
+    }
     .header-text {
 	font-size: 25px;
     }
@@ -272,10 +311,12 @@ input[type="range"]::-moz-range-thumb {
 @media (max-height: 900px) and (min-width: 700px) {
     .chart {
         min-height: 400px;
-        height: 80vh;
+        height: 84vh;
     }
     .all-sliders-container {
         min-height: 300px;
-        height: 80vh;
+        height: auto;
+        max-height: none;
+        overflow: visible;
     }
 }
