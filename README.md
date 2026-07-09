@@ -30,6 +30,8 @@ This project builds directly on the work of others:
   Repository: https://github.com/marius311/mpk_compilation/tree/master
   Paper: https://arxiv.org/abs/1905.08103
 
+OpenAI's CODEX and Anthropic's Claude Code have been heavily used for coding assistance when creating this extension.
+
 ## License
 
 See [LICENSE](LICENSE).
